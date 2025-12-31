@@ -9,7 +9,7 @@ struct Matrix{
 public:
     size_t rows, columns;
     std::vector<double> data;
-    Matrix(const size_t& rows, const size_t& columns) : rows(rows), columns(columns) {
+    Matrix(const size_t& _rows, const size_t& _columns) : rows(_rows), columns(_columns) {
         data.resize(rows*columns);
     }
     /*
@@ -216,5 +216,5 @@ public:
         }
         return ((1 / determinant) * adj());
     }
-    
+
 };
