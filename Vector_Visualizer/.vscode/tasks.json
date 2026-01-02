@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build GLFW project",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-g3",
+        "${file}",
+        "-I/opt/homebrew/include",
+        "-L/opt/homebrew/lib",
+        "-lglfw",
+        "-framework", "OpenGL",
+        "-framework", "Cocoa",
+        "-framework", "IOKit",
+        "-framework", "CoreVideo",
+        "-o",
+        "${workspaceFolder}/main"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
