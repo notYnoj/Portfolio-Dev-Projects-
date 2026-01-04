@@ -329,21 +329,13 @@ int main() {
         double time = curTime - prevTime;
         prevTime = curTime;
         processWSADInput(window, cam, time);
-        
-        // Clear screen
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        // Create view matrix using your lookAt function
         Vec3D target = cam.Position + cam.front;
         Matrix view = Matrix::lookAt(cam.Position, target, cam.up);
-        
-        // Use shader and set uniforms
         glUseProgram(shaderProgram);
         setMatrixUniform(shaderProgram, "view", view);
         setMatrixUniform(shaderProgram, "projection", projection);
-        
-        // Draw grid
         glBindVertexArray(grid.VAO);
         glDrawArrays(GL_LINES, 0, grid.vertexCount);
         glBindVertexArray(0);
