@@ -3,6 +3,8 @@
 #include "../Math Algorithms/3DVector.hpp"
 #include <GLFW/glfw3.h>
 
+//using GLFW 1st POV Camera:
+
 struct Yaw {double x;};
 struct Pitch {double x;};
 struct Roll {double x;};
@@ -84,7 +86,7 @@ struct FirstPersonCamera{
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
             Position = Position - (normalUp * velocity);
     }
-    
+
 };
 
 #endif
