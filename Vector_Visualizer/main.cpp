@@ -130,8 +130,78 @@ struct GridData {
     GLuint VAO, VBO;
     int vertexCount;
 };
+GridData createGrid(double size = 10.0, int divisions = 10){
+    std::vector<double> vertices;
+    //(x,y,z,r,g,b)
+    //we need to draw the endpoints (a -> b)
+    GridData grid;
+    double halfSize = (size / 2.0);
+    double step = size / (divisions * 2.0);  //-halfSize + step * x
+    for(int x = 0; x <= (divisions * 2); x++){
 
-//this doesn't work <3 
+        for(int y = 0; y <= (divisions * 2); y++){
+            bool axis = (x == divisions && y == divisions);
+            double xcord = -halfSize + (step * x);
+            double ycord = -halfSize + (step * y);
+            double r = axis ? 1.0f : 0.0f;
+            double g = axis ? 1.0f : 0.0f;
+            double b = axis ? 1.0f : 0.0f;
+            vertices.push_back(xcord); vertices.push_back(ycord); vertices.push_back(-halfSize);
+            vertices.push_back(r); vertices.push_back(g); vertices.push_back(b);
+            vertices.push_back(xcord); vertices.push_back(ycord); vertices.push_back(halfSize);
+            vertices.push_back(r); vertices.push_back(g); vertices.push_back(b);
+        }
+
+    }
+    for(int x = 0; x <= (divisions * 2); x++){
+
+        for(int z = 0; z <= (divisions * 2); z++){
+            bool axis = (x == divisions && z == divisions);
+            double xcord = -halfSize + (step * x);
+            double zcord = -halfSize + (step * z);
+            double r = axis ? 1.0f : 0.15f;
+            double g = axis ? 1.0f : 0.15f;
+            double b = axis ? 1.0f : 0.15f;
+            vertices.push_back(xcord); vertices.push_back(-halfSize); vertices.push_back(zcord);
+            vertices.push_back(r); vertices.push_back(g); vertices.push_back(b);
+            vertices.push_back(xcord); vertices.push_back(halfSize); vertices.push_back(zcord);
+            vertices.push_back(r); vertices.push_back(g); vertices.push_back(b);
+        }
+
+    }
+
+    for(int y = 0; y <= (divisions * 2); y++){
+
+        for(int z = 0; z <= (divisions * 2); z++){
+            bool axis = (y == divisions && z == divisions);
+            double ycord = -halfSize + (step * y);
+            double zcord = -halfSize + (step * z);
+            double r = axis ? 1.0f : 0.15f;
+            double g = axis ? 1.0f : 0.15f;
+            double b = axis ? 1.0f : 0.15f;
+            vertices.push_back(-halfSize); vertices.push_back(ycord); vertices.push_back(zcord);
+            vertices.push_back(r); vertices.push_back(g); vertices.push_back(b);
+            vertices.push_back(halfSize); vertices.push_back(ycord); vertices.push_back(zcord);
+            vertices.push_back(r); vertices.push_back(g); vertices.push_back(b);
+        }
+
+    }
+
+    grid.vertexCount = vertices.size() / 6;
+    glGenVertexArrays(1, &grid.VAO);
+    glGenBuffers(1, &grid.VBO);
+    glBindVertexArray(grid.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, grid.VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(double), vertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(double), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(double), (void*)(3 * sizeof(double)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    return grid;
+}
+
+/*
 GridData createGrid(double size = 10.0, int divisions = 20) {
     std::vector<double> vertices;
     double step = size / divisions;
@@ -171,6 +241,7 @@ GridData createGrid(double size = 10.0, int divisions = 20) {
     glBindVertexArray(0);
     return grid;
 }
+    */
 
 Matrix createPerspectiveMatrix(double fov, double aspect, double near, double far) {
     Matrix proj(4, 4);
@@ -250,7 +321,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     GLuint shaderProgram = createShaderProgram();
     
-    GridData grid = createGrid(10.0f, 20);
+    GridData grid = createGrid(10.0, 4);
     TargetCamera cam(
         {0, 0, 0},
         Radius{10.0},
@@ -268,7 +339,7 @@ int main() {
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.4f, 0.4f, 0.4f, 0.4f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Vec3D target = cam.Position + cam.front;
         Matrix view = Matrix::lookAt(cam.Position, target, cam.up);

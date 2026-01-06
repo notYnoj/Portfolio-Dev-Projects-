@@ -42,6 +42,6 @@ public:
     static Matrix lookAt(const Vec3D& eye, const Vec3D& focus, const Vec3D& up);
 };
 
-//friend function stuff
-Matrix operator*(double scalar, const Matrix& mat);
+
+
 #endif
